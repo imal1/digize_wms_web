@@ -1,3 +1,10 @@
+/**
+ * @Author: chenzj
+ * @Date:   2019-07-02 10:32:31
+ * @Last modified by:   chenzj
+ * @Last modified time: 2019-07-03 10:45:52
+ */
+
 import React from "react";
 import { Button, Row, Col, Card, Form, Input, Icon, Typography, Divider } from "antd";
 import "./index.scss";
@@ -12,11 +19,11 @@ class LoginPage extends React.Component<any, any> {
     const { getFieldDecorator } = this.props.form;
     return (
       <div className="loginPage">
-        <Row>
-          <Col span={18}>
+        <Row type="flex" align="middle">
+          <Col xxl={16} xl={14} md={12}>
             <div>物流WMS平台</div>
           </Col>
-          <Col span={6} className="login-wrapper">
+          <Col xxl={8} xl={10} md={12} className="login-wrapper">
             <Card className="login-card">
               <Title level={4}>鼎泽后台管理</Title>
               <Divider />
