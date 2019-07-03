@@ -4,23 +4,45 @@
     "rootDir": "src",
     "outDir": "build",
     "lib": [
+      "es6",
       "dom",
-      "dom.iterable",
       "esnext"
     ],
+    "sourceMap": true,
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "rootDirs": [
+      "src",
+      "stories"
+    ],
+    "baseUrl": "src",
+    "importHelpers": true
   },
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "config-overrides.js"
+  ],
   "include": [
     "src"
   ]

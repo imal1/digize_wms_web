@@ -1,13 +1,15 @@
 /**
  * @Author: chenzj
  * @Date:   2019-07-03 10:52:35
- * @Last modified by:   chenzj
- * @Last modified time: 2019-07-03 11:06:12
+ * @Last modified by:
+ * @Last modified time: 2019-07-04 12:37:31
  */
 
 import axios from 'axios';
+import storage from "../utils/storage";
+import queryString from "query-string";
+// import { history } from "../pages/router";
 const uuidv1 = require('uuid/v1');
-
 let newAxios = axios.create({
     responseType: 'json',
     timeout: 30000,
@@ -30,7 +32,47 @@ newAxios.interceptors.request.use(
         // header 添加AppName AppVersion
         config.headers.AppName = 'WebClient';
         config.headers.AppVersion = 0;
-        return config;
+        // 处理地址栏请求
+        let urlParams: any;
+        if (window.location.href.indexOf("?") > -1) {
+            let tempArr: string[] = window.location.href.split("?");
+            if (tempArr[tempArr.length - 1]) {
+                let queryUrl: any = tempArr[tempArr.length - 1];
+                if (queryUrl.indexOf("apiToken") === -1) {
+                    queryUrl = 'http://46f684ce.ngrok.io/';
+                }
+                urlParams = queryString.parse(queryUrl);
+            }
+        }
+        // urlParams.apiHost = 'http://46f684ce.ngrok.io/';
+        if (urlParams && urlParams.apiHost) {
+            config.headers.Authorization = "Bearer " + urlParams.apiToken;
+            let host = urlParams.apiHost;
+            config.url = host + config.url;
+            return config;
+        } else {
+            // Do something before request is sent
+            // let now = +new Date();
+            // let expiresTime: string | null | undefined = storage.get("expiresTime");
+            let token: string | null | undefined = storage.get("apiToken");
+            // if (!expiresTime || now >= Number(expiresTime) || !token) {
+            //     storage.remove("userInfo");
+            //     // setTimeout(() => history.replace("/login"), 0);
+            //     throw new Error("用户登录信息过期，请重新登录");
+            // }
+            config.headers.Authorization = "Bearer " + token;
+            if ((config as any).url.indexOf("http") === -1) {
+                let host = 'http://46f684ce.ngrok.io/';
+                if (!host) {
+                    storage.remove("userInfo");
+                    // setTimeout(() => history.replace("/login"), 0);
+                    throw new Error("用户未登录");
+                }
+                host = host ? host : "";
+                config.url = host + config.url;
+            }
+            return config;
+        }
     },
     function(error) {
         // Do something with request error
@@ -85,3 +127,12 @@ newAxios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export function abortAllXhrs() {
+    xhrs.forEach((item: any) => {
+        item.source.cancel();
+    });
+    xhrs = [];
+}
+
+export default newAxios;
